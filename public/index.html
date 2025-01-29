@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papfMk/3WmYbX2Z6ZzE0HIqE8Y3a6HZYKkP+h30MdaJ2lXj/q27HTAx5cU9pN3QXQ7kLdZsgy49VhTzJb1gEjg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <meta charset="UTF-8">
   <title>LevantFlow Chat</title>
   <!-- Google Fonts -->
@@ -131,6 +134,9 @@
     <!-- Input Area -->
     <div class="input-area">
       <input type="text" id="user-input" placeholder="Ask something in Syrian Arabic...">
+      <button id="emoji-button" aria-label="Add Emoji">
+        <i class="fas fa-smile"></i>
+      </button>
       <button id="send-button">Send</button>
     </div>
   </div>
@@ -189,6 +195,8 @@
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   </script>
+ <!-- Add the External main.js Script Here -->
+ <script src="js/main.js"></script>
 
 </body>
 </html>
