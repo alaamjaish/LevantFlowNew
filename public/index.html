@@ -230,6 +230,22 @@
       box-shadow: 0 0 0 3px rgba(0, 95, 115, 0.3);
     }
 
+    /* ---------- SUGGESTION MESSAGES ---------- */
+    .message.suggestion {
+      background-color: #f0f0f0;
+      color: #666666;
+      align-self: center;
+      border-radius: var(--border-radius);
+      font-style: italic;
+      cursor: pointer;
+      transition: background-color var(--transition-speed);
+      max-width: 90%;
+    }
+
+    .message.suggestion:hover {
+      background-color: #e0e0e0;
+    }
+
     /* ---------- RESPONSIVE DESIGN ---------- */
     @media (max-width: 600px) {
       .chat-container {
@@ -305,8 +321,6 @@
         <button id="send-button" aria-label="Send Message">
           <i class="fas fa-paper-plane"></i> <!-- Send icon -->
         </button>
-
-
       </div>
     </div>
   </div>
@@ -316,22 +330,64 @@
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
-    const emojiButton = document.getElementById('emoji-button');
-    const attachButton = document.getElementById('attach-button'); // New attachment button
-    // const gifButton = document.getElementById('gif-button'); // Uncomment if added
-    // const micButton = document.getElementById('mic-button'); // Uncomment if added
 
-    // Event listeners
-    sendButton.addEventListener('click', sendMessage);
+    // Suggested sentences
+    const suggestions = [
+      "How to say 'Good morning' in Arabic?",
+      "What are the 5 pseudo verbs in Arabic?",
+      "How to congratulate someone in Arabic?",
+      "How to ask for directions in Arabic?",
+      "How to introduce yourself in Arabic?"
+    ];
+
+    // Function to display suggestion messages
+    function displaySuggestions() {
+      suggestions.forEach(suggestion => {
+        const suggestionDiv = document.createElement('div');
+        suggestionDiv.classList.add('message', 'suggestion');
+        suggestionDiv.textContent = suggestion;
+        suggestionDiv.addEventListener('click', () => {
+          userInput.value = suggestion;
+          userInput.focus();
+          removeSuggestions();
+        });
+        chatMessages.appendChild(suggestionDiv);
+      });
+
+      // Auto-scroll to bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Function to remove suggestion messages
+    function removeSuggestions() {
+      const suggestionMessages = document.querySelectorAll('.message.suggestion');
+      suggestionMessages.forEach(msg => msg.remove());
+    }
+
+    // Display suggestions on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      displaySuggestions();
+    });
+
+    // Event listeners for sending messages
+    sendButton.addEventListener('click', () => {
+      removeSuggestions();
+      sendMessage();
+    });
+
     userInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
+        removeSuggestions();
         sendMessage();
       }
     });
-    emojiButton.addEventListener('click', openEmojiPicker);
-    attachButton.addEventListener('click', openAttachment); // Listener for attachment
-    // gifButton.addEventListener('click', openGifPicker); // Listener for GIF
-    // micButton.addEventListener('click', startVoiceInput); // Listener for mic
+
+    // Event listener for input (remove suggestions when user starts typing)
+    userInput.addEventListener('input', () => {
+      if (userInput.value.trim() !== '') {
+        removeSuggestions();
+      }
+    });
 
     // Send message function
     async function sendMessage() {
