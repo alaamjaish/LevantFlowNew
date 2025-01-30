@@ -42,13 +42,16 @@
       margin: 0;
       padding: 0;
     }
+    html, body {
+      height: 100%;
+    }
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(145deg, #e2edf7, #f6f7f7);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: 100%;
       color: var(--color-text);
     }
     
@@ -58,7 +61,8 @@
       flex-direction: column;
       width: 90%;
       max-width: 600px;
-      height: 80vh;
+      height: 100%; /* Changed from 80vh to 100% */
+      max-height: 100%;
       background-color: #ffffff;
       border-radius: var(--border-radius);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -79,11 +83,12 @@
       font-size: var(--font-size-header);
       font-weight: 600;
       border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0; /* Prevent shrinking */
     }
 
     /* ---------- MESSAGES AREA ---------- */
     .chat-messages {
-      flex: 1 1 auto;
+      flex: 1 1 auto; /* Allow to grow and shrink */
       overflow-y: auto;
       padding: 20px;
       background: #fdfdfd;
@@ -153,6 +158,7 @@
       border-top: 1px solid var(--color-border);
       padding: 10px 15px;
       background: var(--color-input-bg);
+      flex-shrink: 0; /* Prevent shrinking */
     }
     .input-area input {
       flex: 1;
@@ -227,10 +233,11 @@
     /* ---------- RESPONSIVE DESIGN ---------- */
     @media (max-width: 600px) {
       .chat-container {
-        height: 85vh; /* Adjusted height for less stretch */
+        height: 100%; /* Utilize all available height */
         width: 95%;
         max-width: 100%; /* Ensure container fits within mobile screen */
         border-radius: 8px; /* Slightly reduced border radius */
+        margin: 0; /* Remove default margins */
       }
       .chat-header {
         font-size: 1.4rem;
@@ -242,7 +249,7 @@
       }
       .input-area {
         flex-direction: column; /* Stack input and buttons vertically */
-        padding: 8px 12px; /* Reduced padding */
+        padding: 8px 16px; /* Reduced padding */
         gap: 8px; /* Increased gap for better touch targets */
       }
       .input-area input {
@@ -255,9 +262,13 @@
         margin-left: 0; /* Remove left margin for vertical layout */
         width: 100%; /* Make buttons full width */
       }
-      #emoji-button {
-        padding: 8px;
-        font-size: 0.95rem;
+      .input-area .button-group {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+      }
+      .input-area .button-group button {
+        flex: 1;
       }
       .message {
         padding: 8px 12px; /* Less padding for compact messages */
@@ -290,20 +301,13 @@
     <!-- Input Area -->
     <div class="input-area">
       <input type="text" id="user-input" placeholder="Ask something in Syrian Arabic...">
-      
-      <button id="send-button" aria-label="Send Message">
-        <i class="fas fa-paper-plane"></i> <!-- Send icon -->
-      </button>
-
-      <button id="emoji-button" aria-label="Add Emoji">
-        <i class="fas fa-smile"></i>
-      </button>
-      
-      <button id="attach-button" aria-label="Attach File">
-        <i class="fas fa-paperclip"></i> <!-- Attachment icon -->
-      </button>
+      <div class="button-group">
+        <button id="send-button" aria-label="Send Message">
+          <i class="fas fa-paper-plane"></i> <!-- Send icon -->
+        </button>
 
 
+      </div>
     </div>
   </div>
 
@@ -367,6 +371,11 @@
       
       // Auto-scroll to bottom
       chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      // Delay scroll to accommodate keyboard
+      setTimeout(() => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }, 300);
     }
 
     // Placeholder function for emoji picker
