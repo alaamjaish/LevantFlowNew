@@ -2,13 +2,39 @@
 <html lang="en">
 <head>
   <!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papfMk/3WmYbX2Z6ZzE0HIqE8Y3a6HZYKkP+h30MdaJ2lXj/q27HTAx5cU9pN3QXQ7kLdZsgy49VhTzJb1gEjg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <meta charset="UTF-8">
   <title>LevantFlow Chat</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    /* ---------- CSS VARIABLES ---------- */
+    :root {
+      /* Color Palette */
+      --color-primary: #005f73; /* Dark Teal */
+      --color-secondary: #0a9396; /* Medium Teal */
+      --color-accent: #94d2bd; /* Light Teal */
+      --color-background: #e9d8a6; /* Soft Yellow */
+      --color-header: #005f73; /* Vibrant Orange */
+      --color-text: #333333; /* Dark Grey */
+      --color-user-message: #005f73; /* Dark Teal */
+      --color-ai-message: #94d2bd; /* Light Teal */
+      --color-input-bg: #ffffff; /* White */
+      --color-border: #cccccc; /* Light Grey */
+      --color-button-bg: #0a9396; /* Medium Teal */
+      --color-button-hover: #005f73; /* Dark Teal */
+      --color-emoji-bg: #0a9396; /* Medium Teal */
+      --color-emoji-hover: #005f73; /* Dark Teal */
+      /* Font Sizes */
+      --font-size-header: 1.6rem;
+      --font-size-message: 1rem;
+      --font-size-input: 1rem;
+      /* Other */
+      --border-radius: 12px;
+      --transition-speed: 0.3s;
+    }
+
     /* ---------- GLOBAL RESET & BASIC STYLES ---------- */
     * {
       box-sizing: border-box;
@@ -17,12 +43,13 @@
     }
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(145deg, #e2edf7, #f6f7f7);
+      background: var(--color-background);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      color: #333;
+      color: var(--color-text);
+      background: linear-gradient(145deg, #e2edf7, #f6f7f7);
     }
     
     /* ---------- CHAT CONTAINER ---------- */
@@ -33,19 +60,25 @@
       max-width: 600px;
       height: 80vh;
       background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       overflow: hidden;
+      border: 1px solid var(--color-border);
+      transition: box-shadow var(--transition-speed);
+    }
+    .chat-container:hover {
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
     }
 
     /* ---------- HEADER ---------- */
     .chat-header {
-      background: #007d8b;
+      background: var(--color-header);
       color: #fff;
       padding: 20px;
       text-align: center;
-      font-size: 1.5rem;
+      font-size: var(--font-size-header);
       font-weight: 600;
+      border-bottom: 1px solid var(--color-border);
     }
 
     /* ---------- MESSAGES AREA ---------- */
@@ -54,30 +87,60 @@
       overflow-y: auto;
       padding: 20px;
       background: #fdfdfd;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
     .message {
       max-width: 80%;
-      margin-bottom: 15px;
       padding: 12px 16px;
       border-radius: 14px;
       line-height: 1.4;
       position: relative;
       animation: fadeIn 0.3s ease forwards;
+      font-size: var(--font-size-message);
+      word-wrap: break-word;
     }
     .message.user {
-      background-color: #007d8b;
+      background-color: var(--color-user-message);
       color: #fff;
-      margin-left: auto;
-      border-bottom-right-radius: 0;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 95, 115, 0.2);
+      position: relative;
+    }
+    .message.user::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      right: -8px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 8px solid var(--color-user-message);
     }
     .message.ai {
-      background-color: #f1f1f1;
-      margin-right: auto;
-      border-bottom-left-radius: 0;
-      color: #333;
+      background-color: var(--color-ai-message);
+      color: var(--color-text);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+    .message.ai::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: -8px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-right: 8px solid var(--color-ai-message);
     }
 
-    /* (Optional) subtle fade-in for new messages */
+    /* Fade-in animation */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -86,35 +149,115 @@
     /* ---------- INPUT AREA ---------- */
     .input-area {
       display: flex;
-      border-top: 1px solid #ccc;
-      padding: 10px;
-      background: #fff;
+      align-items: center;
+      border-top: 1px solid var(--color-border);
+      padding: 10px 15px;
+      background: var(--color-input-bg);
     }
     .input-area input {
       flex: 1;
-      border: 1px solid #ccc;
+      border: 1px solid var(--color-border);
       border-radius: 20px;
       padding: 10px 14px;
-      font-size: 1rem;
+      font-size: var(--font-size-input);
       outline: none;
-      transition: border-color 0.3s;
+      transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+      background: #f9f9f9;
     }
     .input-area input:focus {
-      border-color: #007d8b;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 5px rgba(0, 95, 115, 0.3);
+    }
+    .input-area input::placeholder {
+      color: #999999;
     }
     .input-area button {
-      background: #007d8b;
+      background: var(--color-button-bg);
       color: #fff;
       border: none;
       border-radius: 20px;
-      padding: 0 20px;
-      font-size: 1rem;
+      padding: 10px 18px;
+      font-size: var(--font-size-input);
       cursor: pointer;
       margin-left: 10px;
-      transition: background 0.3s;
+      transition: background var(--transition-speed), transform var(--transition-speed);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .input-area button:hover {
-      background: #005f66;
+      background: var(--color-button-hover);
+      transform: translateY(-2px);
+    }
+    .input-area button:active {
+      transform: translateY(0);
+    }
+    .input-area button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 95, 115, 0.3);
+    }
+
+    /* Emoji Button Specific Styles */
+    #emoji-button {
+      background: var(--color-emoji-bg);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background var(--transition-speed), transform var(--transition-speed);
+      margin-left: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #emoji-button:hover {
+      background: var(--color-emoji-hover);
+      transform: translateY(-2px);
+    }
+    #emoji-button:active {
+      transform: translateY(0);
+    }
+    #emoji-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 95, 115, 0.3);
+    }
+
+    /* ---------- RESPONSIVE DESIGN ---------- */
+    @media (max-width: 600px) {
+      .chat-container {
+        height: 90vh;
+        width: 95%;
+      }
+      .chat-header {
+        font-size: 1.4rem;
+        padding: 16px;
+      }
+      .input-area {
+        padding: 8px 12px;
+        gap: 6px;
+      }
+      .input-area input {
+        padding: 8px 12px;
+        font-size: 0.95rem;
+      }
+      .input-area button {
+        padding: 8px 16px;
+        font-size: 0.95rem;
+      }
+      #emoji-button {
+        padding: 8px;
+        font-size: 0.95rem;
+      }
+      .message {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+      }
+      .message.user::after,
+      .message.ai::after {
+        display: none; /* Hide speech bubbles on smaller screens */
+      }
     }
   </style>
 </head>
@@ -123,7 +266,7 @@
   <div class="chat-container">
     <!-- Header -->
     <div class="chat-header">
-      LevantFlow
+      <i class="fas fa-comments"></i> LevantFlow Chat <!-- Added chat icon -->
     </div>
 
     <!-- Messages Area -->
@@ -137,7 +280,13 @@
       <button id="emoji-button" aria-label="Add Emoji">
         <i class="fas fa-smile"></i>
       </button>
-      <button id="send-button">Send</button>
+      <button id="attach-button" aria-label="Attach File">
+        <i class="fas fa-paperclip"></i> <!-- Attachment icon -->
+      </button>
+      <button id="send-button" aria-label="Send Message">
+        <i class="fas fa-paper-plane"></i> <!-- Send icon -->
+      </button>
+
     </div>
   </div>
 
@@ -146,6 +295,10 @@
     const chatMessages = document.getElementById('chat-messages');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
+    const emojiButton = document.getElementById('emoji-button');
+    const attachButton = document.getElementById('attach-button'); // New attachment button
+    const gifButton = document.getElementById('gif-button'); // New GIF button
+    const micButton = document.getElementById('mic-button'); // New Mic button
 
     // Event listeners
     sendButton.addEventListener('click', sendMessage);
@@ -154,6 +307,10 @@
         sendMessage();
       }
     });
+    emojiButton.addEventListener('click', openEmojiPicker);
+    attachButton.addEventListener('click', openAttachment); // Listener for attachment
+    gifButton.addEventListener('click', openGifPicker); // Listener for GIF
+    micButton.addEventListener('click', startVoiceInput); // Listener for mic
 
     // Send message function
     async function sendMessage() {
@@ -194,9 +351,33 @@
       // Auto-scroll to bottom
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
+
+    // Placeholder function for emoji picker
+    function openEmojiPicker() {
+      alert('Emoji picker functionality is not implemented yet.');
+      // You can integrate an emoji picker library here
+    }
+
+    // Placeholder function for attachment
+    function openAttachment() {
+      alert('Attachment functionality is not implemented yet.');
+      // You can implement file upload functionality here
+    }
+
+    // Placeholder function for GIF picker
+    function openGifPicker() {
+      alert('GIF picker functionality is not implemented yet.');
+      // You can integrate a GIF picker library here
+    }
+
+    // Placeholder function for voice input
+    function startVoiceInput() {
+      alert('Voice input functionality is not implemented yet.');
+      // You can implement voice input functionality here
+    }
   </script>
- <!-- Add the External main.js Script Here -->
- <script src="js/main.js"></script>
+  <!-- Add the External main.js Script Here -->
+  <!-- <script src="js/main.js"></script> -->
 
 </body>
 </html>
