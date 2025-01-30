@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added viewport meta tag -->
   <title>LevantFlow Chat</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -235,6 +236,7 @@
         padding: 16px;
       }
       .input-area {
+        flex-direction: column;
         padding: 8px 12px;
         gap: 6px;
       }
@@ -245,6 +247,8 @@
       .input-area button {
         padding: 8px 16px;
         font-size: 0.95rem;
+        margin-left: 0; /* Adjust margin for vertical layout */
+        width: 100%; /* Make buttons full width */
       }
       #emoji-button {
         padding: 8px;
@@ -283,10 +287,18 @@
       <button id="attach-button" aria-label="Attach File">
         <i class="fas fa-paperclip"></i> <!-- Attachment icon -->
       </button>
+      <!-- Uncomment if you added gif and mic buttons -->
+      <!--
+      <button id="gif-button" aria-label="Add GIF">
+        <i class="fas fa-file-image"></i>
+      </button>
+      <button id="mic-button" aria-label="Voice Input">
+        <i class="fas fa-microphone"></i>
+      </button>
+      -->
       <button id="send-button" aria-label="Send Message">
         <i class="fas fa-paper-plane"></i> <!-- Send icon -->
       </button>
-
     </div>
   </div>
 
@@ -297,8 +309,8 @@
     const sendButton = document.getElementById('send-button');
     const emojiButton = document.getElementById('emoji-button');
     const attachButton = document.getElementById('attach-button'); // New attachment button
-    const gifButton = document.getElementById('gif-button'); // New GIF button
-    const micButton = document.getElementById('mic-button'); // New Mic button
+    // const gifButton = document.getElementById('gif-button'); // Uncomment if added
+    // const micButton = document.getElementById('mic-button'); // Uncomment if added
 
     // Event listeners
     sendButton.addEventListener('click', sendMessage);
@@ -309,8 +321,8 @@
     });
     emojiButton.addEventListener('click', openEmojiPicker);
     attachButton.addEventListener('click', openAttachment); // Listener for attachment
-    gifButton.addEventListener('click', openGifPicker); // Listener for GIF
-    micButton.addEventListener('click', startVoiceInput); // Listener for mic
+    // gifButton.addEventListener('click', openGifPicker); // Listener for GIF
+    // micButton.addEventListener('click', startVoiceInput); // Listener for mic
 
     // Send message function
     async function sendMessage() {
